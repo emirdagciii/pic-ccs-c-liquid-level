@@ -1,0 +1,60 @@
+#include <main.h>
+#define MOTOR_PIN PIN_C0
+
+
+#define use_portb_lcd TRUE 
+#include <lcd.c>
+
+
+float deger=0;
+int calis=0,dur=0,durdur=0;
+
+void motor_calis() 
+{
+    output_high(MOTOR_PIN); 
+}
+
+void motor_dur() 
+{
+    output_low(MOTOR_PIN); 
+}
+
+
+void main()
+{
+   setup_adc_ports(AN0);
+   setup_adc(ADC_CLOCK_INTERNAL);
+   set_tris_a(0xFF);
+   set_tris_c(0x00);
+   set_tris_b(0x00);
+   lcd_init();
+   
+    
+   while(TRUE)
+   {
+      deger= read_adc();
+       lcd_gotoxy(1, 1);
+       printf(lcd_putc, "DEPO SIVI MIKTAR");
+       lcd_gotoxy(1, 0);
+       printf(lcd_putc,"%f",(deger/10));
+       
+      if(deger<=512.0 && durdur==0)
+      { 
+      calis=1; durdur=1;
+      }
+      if(deger==1023.0)
+      { 
+      dur=1; durdur=0;
+      }
+      if(calis==1)
+      {
+      motor_calis(); calis=0;
+      }
+      if(dur==1 && durdur==0)
+      {
+      motor_dur(); dur=0;
+      }
+      
+   }
+
+}
